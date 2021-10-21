@@ -1,0 +1,14 @@
+
+
+tcp_service_pipe.c:
+	作用:
+		读取 IP8 编码 Camera YUV 得到的 H264 管道文件, 然后 作为 TCP service 发送 视频流.
+	编译:
+		gcc -o tcp_service_pipe tcp_service_pipe.c -lpthread
+	验证:
+		IP8:
+			./tcp_service_pipe
+		Ubuntu:
+			ffplay tcp://192.168.8.149:8899 -fflags nobuffer
+		NOTE:
+			tcp://"IP8 IP 地址":8899
