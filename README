@@ -1,4 +1,70 @@
 
+cap ( V4L2 直接 ioctl capturing YUV camera into YUV file)
+	编译:
+		cd cap/
+		gcc -o cap cap.c
+
+	执行:
+		./cap 640 480 300000
+	log:
+		root@debian:/etc/Shutdown_ATE/cap# ./cap 640 480 2
+		[17056.118059] sensor_power_on  ov5640 rear:1,hardware:0
+		[17056.165184] no hardware sensor_power_on
+		Driver: "camera-host"
+		Card: "Camera"
+		Bus: ""
+		Version: 0.0
+		Capabilities: 04000001
+		Input: 0
+		V4L2 pixel formats:
+		0: [0x32315559] 'YU12' (YUV 4:2:0 planar 12 bit)
+		1: [0x32315659] 'YV12' (YVU 4:2:0 planar 12 bit)
+		2: [0x50323234] '422P' (YUV 4:2:2 planar 16 bit)
+		3: [0x56595559] 'YUYV' (YUYV 4:2:2 interleaved 16bit)
+		4: [0x3231564E] 'NV12' (YUV 4:2:0 semi-planar 12 bit)
+		5: [0x3132564E] 'NV21' (YUV 4:2:0 semi-planar 12 bit)
+		6: [0x59565955] 'UYVY' (UYVY)
+
+		Sensor size: 640x480 pixels
+		Frame #2 will be saved into frame_640x480.yuv!
+		Length: 614400  Bytesused: 614400       Address: 0x55931e6020
+		FPS[0]: 63.36
+		Length: 614400  Bytesused: 614400       Address: 0x55931e6030
+		FPS[1]: 59.70
+
+owlencoder ( IP8 S700 OpenMax H264编码 demo ):
+	编译:
+		cd owlencoder/
+		make
+	log:
+		root@debian:/etc/Shutdown_ATE/owlencoder# make
+		echo Linux aarch64
+		Linux aarch64
+		rm -r -f omx_vce_test *.o
+		aarch64-linux-gnu-gcc -c -fPIC -g -O2  -I/usr/include/omx VideoEncTest.c -o VideoEncTest.o
+		In file included from VideoEncTest.c:13:0:
+		ACT_Com.h: In function 慉pp_InBuffer_FreeBuffer?
+		ACT_Com.h:85:20: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+			  omx_free_phy( (void *)((video_handle_t*)( ((video_metadata_t*)(pAppData->pIBuffer[nCounter]))->handle ))->phys_addr );
+							^
+		ACT_Com.h: In function 慉pp_OutBuffer_FreeBuffer?
+		ACT_Com.h:176:20: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+			  omx_free_phy( (void *) ((video_handle_t*)( ((video_metadata_t*)(pAppData->pOBuffer[nCounter]))->handle ))->phys_addr );
+							^
+		VideoEncTest.c: In function 慥IDENCTEST_Fill_MetaData?
+		VideoEncTest.c:280:39: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+		  void* vir_addr = omx_getvir_from_phy((void *) ((video_handle_t*) (pMetadata->handle))->phys_addr);
+											   ^
+		VideoEncTest.c: In function 慶oda_videoenc_Thread?
+		VideoEncTest.c:2388:34: warning: cast to pointer from integer of different size [-Wint-to-pointer-cast]
+			   fwrite(omx_getvir_from_phy((void *) (((video_handle_t*) ((video_metadata_t*) (pBuffer->pBuffer))->handle)->phys_addr
+										  ^
+		aarch64-linux-gnu-gcc -c -fPIC -g -O2  -I/usr/include/omx omx_malloc.c -o omx_malloc.o
+		aarch64-linux-gnu-gcc -o omx_vce_test   VideoEncTest.o  omx_malloc.o -L/usr/lib/omx -ldl -lpthread -lion -lalc
+	执行:
+		./omx_vce_test 640 480 frame_640x480.yuv
+
+
 Python 验证:
 	IP8:
 		python3 tcp_read.py
