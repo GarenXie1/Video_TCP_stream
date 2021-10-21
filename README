@@ -1,8 +1,15 @@
 
+Python 验证:
+	IP8:
+		python3 tcp_read.py
+
+	PC:
+		python3 pyav_readtcp.py
+
 
 tcp_service_pipe.c:
 	作用:
-		读取 IP8 编码 Camera YUV 得到的 H264 管道文件, 然后 作为 TCP service 发送 视频流.
+		C : 读取 IP8 编码 Camera YUV 得到的 H264 管道文件, 然后 作为 TCP service 发送 视频流.
 	编译:
 		gcc -o tcp_service_pipe tcp_service_pipe.c -lpthread
 	验证:
