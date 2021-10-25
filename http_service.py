@@ -31,18 +31,22 @@ class MyHandler(BaseHTTPRequestHandler):
         self.send_response(status_code)
         self.send_header('Content-type', 'text/html')
         self.end_headers()
-        content = '''
-        <html><head><title>Title goes here.</title></head>
-        <body><p>This is a test.</p>
-        <p>You accessed path: {}</p>
-        </body></html>
-        '''.format(path)
-        return bytes(content, 'UTF-8')
+        return bytes(b'I am HTTP server , garen')
 
     def respond(self, opts):
         print(time.asctime(),"MyHandler -> respond ....")
         response = self.handle_http(opts['status'], self.path)
-        self.wfile.write(response)
+
+        # 发送一个文件, StressTestLogFile.txt
+        txt = open("StressTestLogFile.txt", "rb")
+        while True:
+            data = txt.read(1000)
+            self.wfile.write(data)
+            print(len(data))
+            if len(data) == 0:
+                break
+
+
 
 if __name__ == '__main__':
     server_class = HTTPServer
